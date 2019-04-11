@@ -3,15 +3,18 @@ import {
   DECREASE_TIMER,
   INCREASE_BREAK,
   DECREASE_BREAK,
-  RESET_TO_DEFAULT
+  RESET_TO_DEFAULT,
+  TICK_SECOND,
+  SET_INTERVAL_ID
 } from "../actions/actionTypes";
 
 const initialState = {
   //timer default of 25 mins
   //break default of 5 mins
-  secondsRemaining: "",
+  secondsRemaining: 25,
   timer: "25",
-  break: "5"
+  break: "5",
+  intervalId: 0
 };
 
 const pomoReducer = (state = initialState, action) => {
@@ -49,6 +52,20 @@ const pomoReducer = (state = initialState, action) => {
         ...state,
         timer: "25",
         break: "5"
+      };
+
+    case TICK_SECOND:
+      let newTime = state.secondsRemaining - 1;
+
+      return {
+        ...state,
+        secondsRemaining: newTime
+      };
+
+    case SET_INTERVAL_ID:
+      return {
+        ...state,
+        intervalId: action.id
       };
     default:
       return state;

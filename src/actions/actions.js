@@ -21,6 +21,16 @@ export const resetToDefault = () => ({
   type: actionTypes.RESET_TO_DEFAULT
 });
 
+export const tickSecond = second => ({
+  type: actionTypes.TICK_SECOND,
+  second
+});
+
+export const setIntervalId = id => ({
+  type: actionTypes.SET_INTERVAL_ID,
+  id
+});
+
 //Todo actions
 export const addTodo = () => ({
   type: actionTypes.ADD_TODO
