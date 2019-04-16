@@ -12,8 +12,8 @@ const initialState = {
   //timer default of 25 mins
   //break default of 5 mins
   secondsRemaining: 25,
-  timer: "25",
-  break: "5",
+  timer: 25,
+  break: 5,
   intervalId: 0
 };
 
@@ -27,31 +27,33 @@ const pomoReducer = (state = initialState, action) => {
     case INCREASE_TIMER:
       return {
         ...state,
-        todo: "test"
+        timer: state.timer + 1,
+        secondsRemaining: state.secondsRemaining + 1
       };
 
     case DECREASE_TIMER:
       return {
         ...state,
-        todo: "test"
+        timer: state.timer - 1,
+        secondsRemaining: state.secondsRemaining - 1
       };
 
     case INCREASE_BREAK:
       return {
         ...state,
-        todo: "test"
+        break: state.break + 1
       };
 
     case DECREASE_BREAK:
       return {
         ...state,
-        todo: "test"
+        break: state.break - 1
       };
     case RESET_TO_DEFAULT:
       return {
         ...state,
-        timer: "25",
-        break: "5"
+        timer: 25,
+        break: 5
       };
 
     case TICK_SECOND:
