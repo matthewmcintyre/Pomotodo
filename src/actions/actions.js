@@ -13,7 +13,7 @@ export const increaseBreak = () => ({
   type: actionTypes.INCREASE_BREAK
 });
 
-export const decreasebreak = () => ({
+export const decreaseBreak = () => ({
   type: actionTypes.DECREASE_BREAK
 });
 
