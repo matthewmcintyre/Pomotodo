@@ -5,22 +5,25 @@ import {
   increaseTimer,
   increaseBreak,
   decreaseTimer,
-  decreasebreak,
+  decreaseBreak,
   resetToDefault,
   tickSecond,
   setIntervalId
 } from "../../actions/actions";
+import TimerAdjuster from "./TimerAdjuster";
 
 const PomoWrapper = styled.div`
   width: 100vw;
-  height: 50vh;
+  height: 70vh;
   background-color: green;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-evenly;
   align-items: center;
 `;
 
 const Clock = styled.div`
+cursor: pointer;
     font-size:30px;
     width:200px
     height:200px;
@@ -31,26 +34,11 @@ const Clock = styled.div`
     border-radius:50%;
     `;
 
-//wrapper for adjusting break and timer
-const AdjustTimer = styled.div`
+//wraps both of the timers
+const AdjustTimerWrapper = styled.div`
   display: flex;
-  flex-direction: column;
-`;
-
-const UpArrow = styled.div`
-  width: 0;
-  height: 0;
-  border-left: 25px solid transparent;
-  border-right: 25px solid transparent;
-  border-bottom: 50px solid red;
-`;
-
-const DownArrow = styled.div`
-  width: 0;
-  height: 0;
-  border-left: 25px solid transparent;
-  border-right: 25px solid transparent;
-  border-top: 50px solid red;
+  width: 100%;
+  justify-content: space-around;
 `;
 
 class Pomodoro extends Component {
@@ -60,8 +48,14 @@ class Pomodoro extends Component {
 
   componentDidUpdate() {
     console.log(this.props.intervalId + "component did update");
+
+    //stops the timer when it hits 0
     if (this.props.secondsRemaining === 0) {
+      //clears the interval
       clearInterval(this.props.intervalId);
+
+      //reset interval id to 0 so timerStart can be called again
+      this.props.setIntervalId(0);
     }
   }
 
@@ -69,24 +63,38 @@ class Pomodoro extends Component {
     console.log(this.props.intervalId + "component will unmount");
   }
 
-  timerStart = () => {
+  timerStartOrStop = () => {
     if (this.props.intervalId === 0) {
       let id = setInterval(this.props.tickSecond, 1000);
       console.log(id);
       this.props.setIntervalId(id);
       console.log(this.props.intervalId + "interval ID");
+    } else {
+      clearInterval(this.props.intervalId);
+      this.props.setIntervalId(0);
     }
   };
 
   render() {
     return (
       <PomoWrapper>
-        <AdjustTimer>
-          <UpArrow />
-          LMAFO
-          <DownArrow />
-        </AdjustTimer>
-        <Clock onClick={this.timerStart}>{this.props.secondsRemaining}</Clock>
+        <AdjustTimerWrapper>
+          <TimerAdjuster
+            name="Normal"
+            time={this.props.timer}
+            upClick={this.props.increaseTimer}
+            downClick={this.props.decreaseTimer}
+          />
+          <TimerAdjuster
+            name="Break"
+            time={this.props.break}
+            upClick={this.props.increaseBreak}
+            downClick={this.props.decreaseBreak}
+          />
+        </AdjustTimerWrapper>
+        <Clock onClick={this.timerStartOrStop}>
+          {this.props.secondsRemaining}
+        </Clock>
       </PomoWrapper>
     );
   }
@@ -103,7 +111,7 @@ const myActions = {
   increaseTimer,
   increaseBreak,
   decreaseTimer,
-  decreasebreak,
+  decreaseBreak,
   resetToDefault,
   tickSecond,
   setIntervalId
@@ -113,3 +121,18 @@ export default connect(
   mapStateToProps,
   myActions
 )(Pomodoro);
+
+/*
+
+TODO
+
+1. when user adjusts timers it updates the remaining time
+2. this can only be done when the timer is paused
+        - maybe an error message if user tries to click?
+3. starts counting down the break time after session
+4. plays a sound on zero
+5. has a reset to set the defaults
+6. obvious play/pause rather than just clicking on circle
+
+
+*/
