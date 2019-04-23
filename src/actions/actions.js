@@ -1,20 +1,14 @@
 import * as actionTypes from "./actionTypes";
 
 //Pomo actions
-export const increaseTimer = () => ({
-  type: actionTypes.INCREASE_TIMER
+export const setSession = newTime => ({
+  type: actionTypes.SET_SESSION,
+  newTime
 });
 
-export const decreaseTimer = () => ({
-  type: actionTypes.DECREASE_TIMER
-});
-
-export const increaseBreak = () => ({
-  type: actionTypes.INCREASE_BREAK
-});
-
-export const decreaseBreak = () => ({
-  type: actionTypes.DECREASE_BREAK
+export const setBreak = newTime => ({
+  type: actionTypes.SET_BREAK,
+  newTime
 });
 
 export const resetToDefault = () => ({

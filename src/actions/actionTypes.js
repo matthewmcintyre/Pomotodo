@@ -1,8 +1,6 @@
 //Pomo actions
-export const INCREASE_TIMER = "INCREASE_TIMER";
-export const DECREASE_TIMER = "DECREASE_TIMER";
-export const INCREASE_BREAK = "INCREASE_BREAK";
-export const DECREASE_BREAK = "DECREASE_BREAK";
+export const SET_SESSION = "SET_SESSION";
+export const SET_BREAK = "SET_BREAK";
 export const RESET_TO_DEFAULT = "RESET_TO_DEFAULT";
 export const TICK_SECOND = "TICK_SECOND";
 export const SET_INTERVAL_ID = "SET_INTERVAL_ID";

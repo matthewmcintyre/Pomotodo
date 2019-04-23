@@ -1,8 +1,6 @@
 import {
-  INCREASE_TIMER,
-  DECREASE_TIMER,
-  INCREASE_BREAK,
-  DECREASE_BREAK,
+  SET_SESSION,
+  SET_BREAK,
   RESET_TO_DEFAULT,
   TICK_SECOND,
   SET_INTERVAL_ID
@@ -24,31 +22,22 @@ const pomoReducer = (state = initialState, action) => {
   //custom time - do not accept any number below 1
   //custom break
   switch (action.type) {
-    case INCREASE_TIMER:
+    //TODO
+    case SET_SESSION:
       return {
         ...state,
-        timer: state.timer + 1,
+        timer: action.newTime,
         secondsRemaining: state.secondsRemaining + 1
       };
 
-    case DECREASE_TIMER:
+    //TODO FIX ME
+    case SET_BREAK:
       return {
         ...state,
-        timer: state.timer - 1,
+        timer: action.newTime,
         secondsRemaining: state.secondsRemaining - 1
       };
 
-    case INCREASE_BREAK:
-      return {
-        ...state,
-        break: state.break + 1
-      };
-
-    case DECREASE_BREAK:
-      return {
-        ...state,
-        break: state.break - 1
-      };
     case RESET_TO_DEFAULT:
       return {
         ...state,

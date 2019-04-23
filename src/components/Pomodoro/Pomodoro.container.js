@@ -2,20 +2,21 @@ import React, { Component } from "react";
 import styled, { keyframes } from "styled-components";
 import { connect } from "react-redux";
 import {
-  increaseTimer,
-  increaseBreak,
-  decreaseTimer,
-  decreaseBreak,
+  setSession,
+  setBreak,
   resetToDefault,
   tickSecond,
   setIntervalId
 } from "../../actions/actions";
 import TimerAdjuster from "./TimerAdjuster";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRedoAlt } from "@fortawesome/free-solid-svg-icons";
 
 const PomoWrapper = styled.div`
+  position: relative;
   width: 100vw;
-  height: 70vh;
-  background-color: green;
+  height: 220px;
+  background-color: #395c6b;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -23,22 +24,126 @@ const PomoWrapper = styled.div`
 `;
 
 const Clock = styled.div`
-cursor: pointer;
-    font-size:30px;
-    width:200px
-    height:200px;
-    background-color: red;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    border-radius:50%;
-    `;
+  position:absolute;
+  top:140px;
+  cursor: pointer;
+  z-index:1;
+  font-size:30px;
+  width:180px
+  height:180px;
+  background-color: ${props => (props.playing === 0 ? "#F46036" : "#7EBC89")};
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  border-radius:50%;
+  box-shadow: 1px 1px 5px;
+`;
 
 //wraps both of the timers
 const AdjustTimerWrapper = styled.div`
+  position: absolute;
+  top: 30px;
   display: flex;
+  flex-direction: column;
   width: 100%;
-  justify-content: space-around;
+`;
+
+//https://css-tricks.com/making-pure-css-playpause-button/
+
+const PlayPauseButton = styled.div`
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+
+  box-sizing: border-box;
+  height: 37px;
+
+  border-color: transparent transparent transparent #202020;
+  transition: 100ms all ease;
+  will-change: border-width;
+  cursor: pointer;
+
+  // play state
+  border-style: solid;
+  border-width: 18.5px 0 18.5px 30px;
+
+  // paused state
+  &.pause {
+    border-style: double;
+    border-width: 0px 0 0px 30px;
+  }
+`;
+
+const ResetButton = styled(FontAwesomeIcon)`
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  font-size: 35px;
+  color: #202020;
+`;
+
+const rotateLeft = keyframes`
+0% {
+  -webkit-transform: rotate(0deg);
+}
+50% {
+  -webkit-transform: rotate(180deg);
+}
+100% {
+  -webkit-transform: rotate(180deg);
+}
+`;
+
+const rotateRight = keyframes`
+0% {
+  -webkit-transform: rotate(0deg);
+}
+50% {
+  -webkit-transform: rotate(0deg);
+}
+100% {
+  -webkit-transform: rotate(180deg);
+}
+`;
+
+//https://medium.com/creative-technology-concepts-code/circular-loading-bar-using-css-only-a847650582ef
+const CircleLoading = styled.div`
+  position: absolute;
+  top: 120px;
+  z-index: 999;
+
+  span {
+    width: 200px;
+    height: 200px;
+    border-radius: 100%;
+    position: absolute;
+    opacity: 0.5;
+    border: 10px double #5cb16e;
+  }
+`;
+
+const LeftCircle = styled.div`
+  right: calc(50% + 110px);
+  position: absolute;
+  clip: rect(0, 250px, 250px, 110px);
+
+  span {
+    clip: rect(0, 110px, 250px, 0px);
+    animation: ${rotateLeft} ${props => props.duration + "s"} infinite linear;
+    animation-play-state: ${props =>
+      props.playing === 0 ? "paused" : "running"};
+  }
+`;
+const RightCircle = styled.div`
+  right: calc(50% + 110px);
+  position: absolute;
+  clip: rect(0px, 110px, 250px, 0px);
+  span {
+    clip: rect(0px, 250px, 250px, 110px);
+    animation: ${rotateRight} ${props => props.duration + "s"} infinite linear;
+    animation-play-state: ${props =>
+      props.playing === 0 ? "paused" : "running"};
+  }
 `;
 
 class Pomodoro extends Component {
@@ -80,21 +185,35 @@ class Pomodoro extends Component {
       <PomoWrapper>
         <AdjustTimerWrapper>
           <TimerAdjuster
-            name="Normal"
+            name="Session"
             time={this.props.timer}
-            upClick={this.props.increaseTimer}
-            downClick={this.props.decreaseTimer}
+            onChange={this.props.setSession(this.value)}
           />
           <TimerAdjuster
             name="Break"
             time={this.props.break}
-            upClick={this.props.increaseBreak}
-            downClick={this.props.decreaseBreak}
+            onChange={this.props.setBreak}
           />
         </AdjustTimerWrapper>
-        <Clock onClick={this.timerStartOrStop}>
+        <CircleLoading>
+          <LeftCircle
+            playing={this.props.intervalId}
+            duration={this.props.timer}
+          >
+            <span />
+          </LeftCircle>
+          <RightCircle
+            playing={this.props.intervalId}
+            duration={this.props.timer}
+          >
+            <span />
+          </RightCircle>
+        </CircleLoading>
+        <PlayPauseButton />
+        <Clock onClick={this.timerStartOrStop} playing={this.props.intervalId}>
           {this.props.secondsRemaining}
         </Clock>
+        <ResetButton icon={faRedoAlt} />
       </PomoWrapper>
     );
   }
@@ -108,10 +227,8 @@ const mapStateToProps = state => ({
 });
 
 const myActions = {
-  increaseTimer,
-  increaseBreak,
-  decreaseTimer,
-  decreaseBreak,
+  setSession,
+  setBreak,
   resetToDefault,
   tickSecond,
   setIntervalId
