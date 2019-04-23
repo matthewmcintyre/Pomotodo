@@ -10,7 +10,7 @@ const GlobalStyle = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css?family=Bitter');
 
   body {
-    background: #31393C;
+    background: #E6EBE0;
    
   }
   * {
