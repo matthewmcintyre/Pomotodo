@@ -4,6 +4,7 @@ export const SET_BREAK = "SET_BREAK";
 export const RESET_TO_DEFAULT = "RESET_TO_DEFAULT";
 export const TICK_SECOND = "TICK_SECOND";
 export const SET_INTERVAL_ID = "SET_INTERVAL_ID";
+export const SET_REMAINING_TIME = "SET_REMAINING_TIME";
 //Todo actions
 export const ADD_TODO = "ADD_TODO";
 export const REMOVE_TODO = "REMOVE_TODO";

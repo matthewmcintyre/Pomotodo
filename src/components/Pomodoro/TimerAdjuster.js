@@ -1,36 +1,9 @@
 import React from "react";
-import styled, { keyframes } from "styled-components";
-import { connect } from "react-redux";
-import { setSession, setBreak } from "../../actions/actions";
-
-//wrapper for adjusting break and timer
-const AdjustTimer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const UpArrow = styled.div`
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-bottom: 20px solid red;
-  cursor: pointer;
-`;
-
-const DownArrow = styled.div`
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-top: 20px solid red;
-  cursor: pointer;
-`;
+import styled from "styled-components";
 
 const Text = styled.div`
-  width: 30%;
-  font-size: 20px;
+  width: 20%;
+  font-size: 17px;
 `;
 
 const Wrapper = styled.div`
@@ -45,7 +18,7 @@ const Wrapper = styled.div`
 const Slider = styled.input`
   -webkit-appearance: none; /* Override default CSS styles */
   appearance: none;
-  width: 60%;
+  width: 54%;
   height: 10px;
   border-radius: 4px;
   background: #e6e1c5;
@@ -75,38 +48,25 @@ const Slider = styled.input`
   }
 `;
 
+const Digits = styled.div`
+  width: 8%;
+  font-size: 20px;
+`;
+
 function TimerAdjuster(props) {
   return (
     <Wrapper>
-      <Text>
-        {props.name}: {props.time}
-      </Text>
-      <Slider type="range" min="1" max="60" value="50" />
-    </Wrapper>
-    /*
-    <AdjustTimer>
       <Text>{props.name}</Text>
-      <UpArrow onClick={props.upClick} />
-      <Digit>{props.time} Minutes</Digit>
-      <DownArrow onClick={props.downClick} />
-    </AdjustTimer>
-    */
+      <Slider
+        type="range"
+        min={props.min}
+        max={props.max}
+        defaultValue={props.defaultValue}
+        onChange={props.onChange}
+      />
+      <Digits>{props.time}</Digits>
+    </Wrapper>
   );
 }
 
-const mapStateToProps = state => ({
-  secondsRemaining: state.pomoReducer.secondsRemaining,
-  timer: state.pomoReducer.timer,
-  break: state.pomoReducer.break,
-  intervalId: state.pomoReducer.intervalId
-});
-
-const myActions = {
-  setSession,
-  setBreak
-};
-
-export default connect(
-  mapStateToProps,
-  myActions
-)(TimerAdjuster);
+export default TimerAdjuster;

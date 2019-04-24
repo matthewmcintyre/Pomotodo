@@ -6,7 +6,8 @@ import {
   setBreak,
   resetToDefault,
   tickSecond,
-  setIntervalId
+  setIntervalId,
+  setRemainingTime
 } from "../../actions/actions";
 import TimerAdjuster from "./TimerAdjuster";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -25,10 +26,10 @@ const PomoWrapper = styled.div`
 
 const Clock = styled.div`
   position:absolute;
-  top:140px;
+  top:120px;
   cursor: pointer;
   z-index:1;
-  font-size:30px;
+  font-size:35px;
   width:180px
   height:180px;
   background-color: ${props => (props.playing === 0 ? "#F46036" : "#7EBC89")};
@@ -63,14 +64,13 @@ const PlayPauseButton = styled.div`
   will-change: border-width;
   cursor: pointer;
 
-  // play state
-  border-style: solid;
-  border-width: 18.5px 0 18.5px 30px;
+  //sets play or pause styling
+  border-style: ${props => (props.playing === 0 ? "solid" : "double")};
+  border-width: ${props =>
+    props.playing === 0 ? "18.5px 0 18.5px 30px" : "0px 0 0px 30px"};
 
-  // paused state
-  &.pause {
-    border-style: double;
-    border-width: 0px 0 0px 30px;
+  :hover {
+    border-color: transparent transparent transparent #404040;
   }
 `;
 
@@ -80,69 +80,9 @@ const ResetButton = styled(FontAwesomeIcon)`
   right: 20px;
   font-size: 35px;
   color: #202020;
-`;
 
-const rotateLeft = keyframes`
-0% {
-  -webkit-transform: rotate(0deg);
-}
-50% {
-  -webkit-transform: rotate(180deg);
-}
-100% {
-  -webkit-transform: rotate(180deg);
-}
-`;
-
-const rotateRight = keyframes`
-0% {
-  -webkit-transform: rotate(0deg);
-}
-50% {
-  -webkit-transform: rotate(0deg);
-}
-100% {
-  -webkit-transform: rotate(180deg);
-}
-`;
-
-//https://medium.com/creative-technology-concepts-code/circular-loading-bar-using-css-only-a847650582ef
-const CircleLoading = styled.div`
-  position: absolute;
-  top: 120px;
-  z-index: 999;
-
-  span {
-    width: 200px;
-    height: 200px;
-    border-radius: 100%;
-    position: absolute;
-    opacity: 0.5;
-    border: 10px double #5cb16e;
-  }
-`;
-
-const LeftCircle = styled.div`
-  right: calc(50% + 110px);
-  position: absolute;
-  clip: rect(0, 250px, 250px, 110px);
-
-  span {
-    clip: rect(0, 110px, 250px, 0px);
-    animation: ${rotateLeft} ${props => props.duration + "s"} infinite linear;
-    animation-play-state: ${props =>
-      props.playing === 0 ? "paused" : "running"};
-  }
-`;
-const RightCircle = styled.div`
-  right: calc(50% + 110px);
-  position: absolute;
-  clip: rect(0px, 110px, 250px, 0px);
-  span {
-    clip: rect(0px, 250px, 250px, 110px);
-    animation: ${rotateRight} ${props => props.duration + "s"} infinite linear;
-    animation-play-state: ${props =>
-      props.playing === 0 ? "paused" : "running"};
+  :hover {
+    color: #404040;
   }
 `;
 
@@ -154,30 +94,41 @@ class Pomodoro extends Component {
   componentDidUpdate() {
     console.log(this.props.intervalId + "component did update");
 
-    //stops the timer when it hits 0
+    //timer hits 0
     if (this.props.secondsRemaining === 0) {
-      //clears the interval
-      clearInterval(this.props.intervalId);
+      //PLAY A SOUND
 
-      //reset interval id to 0 so timerStart can be called again
-      this.props.setIntervalId(0);
+      //what timer just finished?
+      //set time remaining to the other one
+      if (this.props.inSession === true) {
+        this.props.setRemainingTime(false);
+      } else {
+        this.props.setRemainingTime(true);
+      }
     }
-  }
-
-  componentWillUnmount() {
-    console.log(this.props.intervalId + "component will unmount");
   }
 
   timerStartOrStop = () => {
     if (this.props.intervalId === 0) {
       let id = setInterval(this.props.tickSecond, 1000);
-      console.log(id);
       this.props.setIntervalId(id);
-      console.log(this.props.intervalId + "interval ID");
     } else {
       clearInterval(this.props.intervalId);
       this.props.setIntervalId(0);
     }
+  };
+
+  changeSession = e => {
+    this.props.setSession(e.target.value);
+  };
+
+  changeBreak = e => {
+    this.props.setBreak(e.target.value);
+  };
+
+  resetAll = () => {
+    clearInterval(this.props.intervalId);
+    this.props.resetToDefault();
   };
 
   render() {
@@ -185,35 +136,30 @@ class Pomodoro extends Component {
       <PomoWrapper>
         <AdjustTimerWrapper>
           <TimerAdjuster
-            name="Session"
-            time={this.props.timer}
-            onChange={this.props.setSession(this.value)}
+            name="SESSION"
+            min="1"
+            max="60"
+            defaultValue="25"
+            time={this.props.session}
+            onChange={this.changeSession}
           />
           <TimerAdjuster
-            name="Break"
+            name="BREAK"
+            min="1"
+            max="25"
+            defaultValue="5"
             time={this.props.break}
-            onChange={this.props.setBreak}
+            onChange={this.changeBreak}
           />
         </AdjustTimerWrapper>
-        <CircleLoading>
-          <LeftCircle
-            playing={this.props.intervalId}
-            duration={this.props.timer}
-          >
-            <span />
-          </LeftCircle>
-          <RightCircle
-            playing={this.props.intervalId}
-            duration={this.props.timer}
-          >
-            <span />
-          </RightCircle>
-        </CircleLoading>
-        <PlayPauseButton />
+        <PlayPauseButton
+          onClick={this.timerStartOrStop}
+          playing={this.props.intervalId}
+        />
         <Clock onClick={this.timerStartOrStop} playing={this.props.intervalId}>
-          {this.props.secondsRemaining}
+          {this.props.mm}:{this.props.ss}
         </Clock>
-        <ResetButton icon={faRedoAlt} />
+        <ResetButton icon={faRedoAlt} onClick={this.resetAll} />
       </PomoWrapper>
     );
   }
@@ -221,9 +167,12 @@ class Pomodoro extends Component {
 
 const mapStateToProps = state => ({
   secondsRemaining: state.pomoReducer.secondsRemaining,
-  timer: state.pomoReducer.timer,
+  session: state.pomoReducer.session,
   break: state.pomoReducer.break,
-  intervalId: state.pomoReducer.intervalId
+  intervalId: state.pomoReducer.intervalId,
+  inSession: state.pomoReducer.inSession,
+  mm: state.pomoReducer.mm,
+  ss: state.pomoReducer.ss
 });
 
 const myActions = {
@@ -231,25 +180,11 @@ const myActions = {
   setBreak,
   resetToDefault,
   tickSecond,
-  setIntervalId
+  setIntervalId,
+  setRemainingTime
 };
 
 export default connect(
   mapStateToProps,
   myActions
 )(Pomodoro);
-
-/*
-
-TODO
-
-1. when user adjusts timers it updates the remaining time
-2. this can only be done when the timer is paused
-        - maybe an error message if user tries to click?
-3. starts counting down the break time after session
-4. plays a sound on zero
-5. has a reset to set the defaults
-6. obvious play/pause rather than just clicking on circle
-
-
-*/

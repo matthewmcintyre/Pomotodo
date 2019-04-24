@@ -15,14 +15,18 @@ export const resetToDefault = () => ({
   type: actionTypes.RESET_TO_DEFAULT
 });
 
-export const tickSecond = second => ({
-  type: actionTypes.TICK_SECOND,
-  second
+export const tickSecond = () => ({
+  type: actionTypes.TICK_SECOND
 });
 
 export const setIntervalId = id => ({
   type: actionTypes.SET_INTERVAL_ID,
   id
+});
+
+export const setRemainingTime = sessionOrBreak => ({
+  type: actionTypes.SET_REMAINING_TIME,
+  sessionOrBreak
 });
 
 //Todo actions
