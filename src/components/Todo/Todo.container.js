@@ -8,9 +8,22 @@ import {
   undoCompleteTodo
 } from "../../actions/actions";
 
+const ListWrapper = styled.div`
+  box-sizing: border-box;
+  border: 20px solid #e6ebe0;
+  position: relative;
+  width: 100vw;
+  height: calc(100vh - 220px);
+  background-color: #b8c4bb;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+`;
+
 class Todo extends Component {
   render() {
-    return <div>Hi</div>;
+    return <ListWrapper>Hi</ListWrapper>;
   }
 }
 
