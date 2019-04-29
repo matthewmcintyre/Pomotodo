@@ -30,18 +30,30 @@ export const setRemainingTime = sessionOrBreak => ({
 });
 
 //Todo actions
+
+let nextTodoId = 1;
+
 export const addTodo = () => ({
-  type: actionTypes.ADD_TODO
+  type: actionTypes.ADD_TODO,
+  id: nextTodoId++
 });
 
-export const removeTodo = () => ({
-  type: actionTypes.REMOVE_TODO
+export const completeTodo = id => ({
+  type: actionTypes.COMPLETE_TODO,
+  id
 });
 
-export const completeTodo = () => ({
-  type: actionTypes.COMPLETE_TODO
+export const updateTodo = (id, value) => ({
+  type: actionTypes.UPDATE_TODO,
+  id,
+  value
 });
 
-export const undoCompleteTodo = () => ({
-  type: actionTypes.UNDO_COMPLETE_TODO
+//Todo settings actions
+export const showActive = () => ({
+  type: actionTypes.SHOW_ACTIVE
+});
+
+export const showCompleted = () => ({
+  type: actionTypes.SHOW_COMPLETED
 });
