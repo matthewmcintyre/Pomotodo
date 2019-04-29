@@ -107,8 +107,10 @@ const pomoReducer = (state = initialState, action) => {
         timer: 25,
         break: 5,
         intervalId: 0,
-        secondsRemaining: 25,
-        inSession: true
+        secondsRemaining: 1500,
+        inSession: true,
+        mm: 25,
+        ss: "00"
       };
 
     case TICK_SECOND:
