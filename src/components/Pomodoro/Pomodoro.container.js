@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import { connect } from "react-redux";
 import {
   setSession,
@@ -16,7 +16,7 @@ import { faRedoAlt } from "@fortawesome/free-solid-svg-icons";
 const PomoWrapper = styled.div`
   position: relative;
   width: 100vw;
-  height: 220px;
+  height: 230px;
   background-color: #395c6b;
   display: flex;
   flex-direction: column;
@@ -26,7 +26,7 @@ const PomoWrapper = styled.div`
 
 const Clock = styled.div`
   position:absolute;
-  top:120px;
+  top:100px;
   cursor: pointer;
   z-index:1;
   font-size:35px;
@@ -43,7 +43,7 @@ const Clock = styled.div`
 //wraps both of the timers
 const AdjustTimerWrapper = styled.div`
   position: absolute;
-  top: 30px;
+  top: 10px;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -87,16 +87,10 @@ const ResetButton = styled(FontAwesomeIcon)`
 `;
 
 class Pomodoro extends Component {
-  componentDidMount() {
-    console.log(this.props.intervalId + "component did mount");
-  }
-
   componentDidUpdate() {
-    console.log(this.props.intervalId + "component did update");
-
     //timer hits 0
     if (this.props.secondsRemaining === 0) {
-      //PLAY A SOUND
+      //TODO PLAY A SOUND
 
       //what timer just finished?
       //set time remaining to the other one
