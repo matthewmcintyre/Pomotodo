@@ -12,6 +12,7 @@ const GlobalStyle = createGlobalStyle`
   body {
     background: #E6EBE0;
     font-family: 'Roboto Mono', monospace;
+
   }
   * {
     margin: 0;
