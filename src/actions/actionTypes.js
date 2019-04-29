@@ -7,6 +7,9 @@ export const SET_INTERVAL_ID = "SET_INTERVAL_ID";
 export const SET_REMAINING_TIME = "SET_REMAINING_TIME";
 //Todo actions
 export const ADD_TODO = "ADD_TODO";
-export const REMOVE_TODO = "REMOVE_TODO";
+export const UPDATE_TODO = "UPDATE_TODO";
 export const COMPLETE_TODO = "COMPLETE_TODO";
-export const UNDO_COMPLETE_TODO = "UNDO_COMPLETE_TODO";
+
+//Todo settings actions
+export const SHOW_ACTIVE = "SHOW_ACTIVE";
+export const SHOW_COMPLETED = "SHOW_COMPLETED";
