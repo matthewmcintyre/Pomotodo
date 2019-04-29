@@ -4,6 +4,8 @@ import styled from "styled-components";
 const Text = styled.div`
   width: 20%;
   font-size: 17px;
+
+  text-decoration: ${props => (props.active === true ? "underline" : "none")};
 `;
 
 const Wrapper = styled.div`
@@ -56,7 +58,7 @@ const Digits = styled.div`
 function TimerAdjuster(props) {
   return (
     <Wrapper>
-      <Text>{props.name}</Text>
+      <Text active={props.active}>{props.name}</Text>
       <Slider
         type="range"
         min={props.min}

@@ -18,7 +18,8 @@ const Wrapper = styled.div`
   position: relative;
   box-sizing: border-box;
   border: 20px solid #e6ebe0;
-  width: 100vw;
+  max-width: 800px;
+  margin: auto;
   height: calc(100vh - 230px);
   background-color: #b8c4bb;
   display: flex;
@@ -67,6 +68,10 @@ const ActiveListWrapper = styled.div`
   background-color: #97a19a;
 
   z-index: ${props => (props.isActive === true ? "2" : "1")};
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 //display completed
@@ -80,6 +85,10 @@ const CompletedListWrapper = styled.div`
   background-color: #95d9c3;
 
   z-index: ${props => (props.isActive === false ? "2" : "1")};
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const PlusWrapper = styled.div`

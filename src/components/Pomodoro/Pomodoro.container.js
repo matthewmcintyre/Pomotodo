@@ -12,6 +12,7 @@ import {
 import TimerAdjuster from "./TimerAdjuster";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRedoAlt } from "@fortawesome/free-solid-svg-icons";
+import chime from "../../sounds/chime.mp3";
 
 const PomoWrapper = styled.div`
   position: relative;
@@ -47,15 +48,12 @@ const AdjustTimerWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  max-width: 450px;
 `;
 
 //https://css-tricks.com/making-pure-css-playpause-button/
 
 const PlayPauseButton = styled.div`
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-
   box-sizing: border-box;
   height: 37px;
 
@@ -75,9 +73,6 @@ const PlayPauseButton = styled.div`
 `;
 
 const ResetButton = styled(FontAwesomeIcon)`
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
   font-size: 35px;
   color: #202020;
 
@@ -86,12 +81,24 @@ const ResetButton = styled(FontAwesomeIcon)`
   }
 `;
 
+//wraps the buttons so as the positioning will be responsive on all devices
+const ButtonWrapper = styled.div`
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  bottom: 20px;
+  width: 100%;
+  max-width: 300px;
+  display: flex;
+  margin: auto;
+`;
+
 class Pomodoro extends Component {
   componentDidUpdate() {
     //timer hits 0
     if (this.props.secondsRemaining === 0) {
       //TODO PLAY A SOUND
-
+      document.getElementById("alarm").play();
       //what timer just finished?
       //set time remaining to the other one
       if (this.props.inSession === true) {
@@ -131,6 +138,7 @@ class Pomodoro extends Component {
         <AdjustTimerWrapper>
           <TimerAdjuster
             name="SESSION"
+            active={this.props.inSession}
             min="1"
             max="60"
             defaultValue="25"
@@ -139,6 +147,7 @@ class Pomodoro extends Component {
           />
           <TimerAdjuster
             name="BREAK"
+            active={!this.props.inSession}
             min="1"
             max="25"
             defaultValue="5"
@@ -146,14 +155,17 @@ class Pomodoro extends Component {
             onChange={this.changeBreak}
           />
         </AdjustTimerWrapper>
-        <PlayPauseButton
-          onClick={this.timerStartOrStop}
-          playing={this.props.intervalId}
-        />
+        <audio src={chime} id="alarm" />
         <Clock onClick={this.timerStartOrStop} playing={this.props.intervalId}>
           {this.props.mm}:{this.props.ss}
         </Clock>
-        <ResetButton icon={faRedoAlt} onClick={this.resetAll} />
+        <ButtonWrapper>
+          <PlayPauseButton
+            onClick={this.timerStartOrStop}
+            playing={this.props.intervalId}
+          />
+          <ResetButton icon={faRedoAlt} onClick={this.resetAll} />
+        </ButtonWrapper>
       </PomoWrapper>
     );
   }
