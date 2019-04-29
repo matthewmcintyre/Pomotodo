@@ -7,11 +7,11 @@ import Todo from "./components/Todo/Todo.container";
 
 const GlobalStyle = createGlobalStyle`
 
-@import url('https://fonts.googleapis.com/css?family=Bitter');
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono');
 
   body {
-    background: red;
-   
+    background: #E6EBE0;
+    font-family: 'Roboto Mono', monospace;
   }
   * {
     margin: 0;

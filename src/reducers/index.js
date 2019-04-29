@@ -1,5 +1,6 @@
 import { combineReducers } from "redux";
 import pomoReducer from "./pomoReducer";
-import todoReducer from "./todoReducer";
+import todos from "./todos";
+import todoSettings from "./todoSettings";
 
-export default combineReducers({ todoReducer, pomoReducer });
+export default combineReducers({ todos, pomoReducer, todoSettings });
