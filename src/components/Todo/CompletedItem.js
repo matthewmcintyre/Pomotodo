@@ -19,6 +19,10 @@ const TextArea = styled.div`
   background-color: #efc88b;
   padding: 2px;
   font-size: 20px;
+
+::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const CheckBox = styled.input`
